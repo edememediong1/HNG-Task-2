@@ -11,7 +11,7 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended: true}));
 
-app.post("/calculate", arithOpts)
+app.post("/", arithOpts)
 
 // Error handler middleware
 app.use((error, req, res, next) => {
