@@ -6,12 +6,20 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
-app.use(cors())
-
 app.use(express.json())
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({extended: false}));
 
-app.post("/", arithOpts)
+app.use(cors({
+    origin: '*'
+}));
+
+app.get('/', (req, res) => {
+    res.status(200).send(
+        "Welocome to basic Arithemtic opertions"
+    )
+})
+
+app.post("/calculate", arithOpts)
 
 // Error handler middleware
 app.use((error, req, res, next) => {
@@ -23,6 +31,6 @@ app.use((error, req, res, next) => {
 
 app.listen(PORT, () => {
     console.log(`Server listening at port ${PORT}`)
-})
+});
 
 

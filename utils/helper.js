@@ -1,6 +1,3 @@
-const {compute} = require('./nlp')
-
-
 function arithOperation(params, x, y) {
    switch (params) { 
        case 'addition':
@@ -17,68 +14,35 @@ function arithOperation(params, x, y) {
    }
 }
 
-const performArithOpt = async (req, res, next) => {
-    const operation_type = req.body.operation_type
-    const x = req.body.x * 1
-    const y = req.body.y * 1
+const performArithOpt = (req, res, next) => {
+    let {operation_type, x, y} = req.body
     try {
-        if (!operation_type){
+        if (!operation_type || !x || !y){
             return res.status(404).json({
                 status: false,
-                msg: 'Invalid Operation'
+                msg: 'All inputs are required'
             })
         }
         let lowerOptType = operation_type.toLowerCase()
-        let result;
-        if (!x || !y){
-            let answer = await compute(lowerOptType.replace('x', x).replace('y', y)) //run openAI model on the word
-            let first_num = parseInt(lowerOptType.replace('x', x).replace('y', y).replace(/\D/g,' z ').match(/\d+/g)?.[0]);
-            let second_num = parseInt(lowerOptType.replace('x', x).replace('y', y).replace(/\D/g,' z ').match(/\d+/g)?.[1]);
-            
-         
+        x = x * 1
+        y = y * 1
+       
+        const opts = ["addition", "subtraction", "multiplication"];
+        const checkOpts = opts.indexOf(lowerOptType)
 
-            if(Math.round(first_num + second_num) == Math.round(answer)) lowerOptType = 'addition'
-            else if(Math.round(first_num - second_num) == Math.round(answer)) lowerOptType = 'subtraction'
-            else if(Math.round(second_num - first_num) == Math.round(answer)) lowerOptType = 'subtraction'
-            else if(Math.round(first_num * second_num) == Math.round(answer)) lowerOptType = 'multiplication'
-            else lowerOptType = lowerOptType
-            
-
-            return res.status(200).json({
-                slackUsername: 'eddy.js',
-                result: parseFloat(answer),
-                operation_type: lowerOptType
+        if(checkOpts === -1) {
+            return res.status(404).json({
+                status: false,
+                msg: "Invalid operation"
             })
-        } else {
-            if (operation_type && x && y){
-                const opts = ["addition", "subtraction", "multiplication"];
-                const checkOpts = opts.indexOf(lowerOptType)
-    
-                if(checkOpts != -1) {
-                    result = arithOperation(lowerOptType, x,  y)
-                    return res.status(200).json({
-                    slackUsername: "eddy.js",
-                    operation_type: lowerOptType,
-                    result
-                })
-                }
-            }
+        
         }
-
-        
-        // const opts = ["addition", "subtraction", "multiplication"];
-        // const checkOpts = opts.indexOf(lowerOptType)
-
-        // if (checkOpts > -1) {
-        //     result = arithOperation(lowerOptType, x,  y)
-        //     return res.status(200).json({
-        //     slackUsername: "eddy.js",
-        //     operation_type: lowerOptType,
-        //     result})
-
-        // }   
-
-        
+        const result = arithOperation(lowerOptType, x,  y)
+        return res.status(200).json({
+        slackUsername: "eddy.js",
+        operation_type: lowerOptType,
+        result
+        }) 
     } catch (error) {
         console.log(error)
         next()
