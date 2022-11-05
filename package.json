@@ -1,12 +1,11 @@
-{
-  "name": "hng-task2",
+{"name": "hng-task2",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
     "start:": "node app.js"
   },
-  "author": "Edet Emmanuel Asuquo",
+  "author": "Emediong Bassey Edem",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",

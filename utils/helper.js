@@ -39,7 +39,7 @@ const performArithOpt = (req, res, next) => {
         }
         const result = arithOperation(lowerOptType, x,  y)
         return res.status(200).json({
-        slackUsername: "eddy.js",
+        slackUsername: "0xMoon",
         operation_type: lowerOptType,
         result
         }) 
